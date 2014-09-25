@@ -1,0 +1,31 @@
+{
+    "name": "blar/xmlrpc",
+    "description": "XMLRPC für PHP",
+    "type": "library",
+    "keywords": ["php", "xmlrpc", "webservice"],
+    "homepage": "https://github.com/blar/xmlrpc/",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Andreas Treichel",
+            "email": "gmblar+github@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "ext-xmlrpc": "*", "blar/http": "dev-master"
+    },
+    "require-dev": {
+        "satooshi/php-coveralls": "dev-master"
+    },
+    "support": {
+        "source": "https://github.com/blar/xmlrpc/",
+        "issues": "https://github.com/blar/xmlrpc/issues",
+        "wiki": "https://github.com/blar/xmlrpc/wiki"
+    },
+    "autoload": {
+        "psr-4": {
+            "Blar\\Xmlrpc\\": "lib/Blar/Xmlrpc/"
+        }
+    }
+}
