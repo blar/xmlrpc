@@ -7,6 +7,7 @@
 namespace Blar\Xmlrpc;
 
 use DateTimeInterface;
+use DateTime;
 
 /**
  * Class Xmlrpc
@@ -59,16 +60,44 @@ class Xmlrpc {
 
     /**
      * @param mixed $values
+     * @return mixed
      */
-    public static function auto($values) {
-        array_walk_recursive($values, function($value) {
+    public static function encodeValues($values) {
+        array_walk_recursive($values, function(&$value) {
 
             if($value instanceof DateTimeInterface) {
                 $value = $value->format(DateTime::ISO8601);
                 Xmlrpc::setType($value, 'datetime');
             }
 
+            if(!ctype_print($value)) {
+                Xmlrpc::setType($value, 'base64');
+            }
+
         });
+        return $values;
+    }
+
+    /**
+     * @param mixed $values
+     * @return mixed
+     */
+    public static function decodeValues($values) {
+        if(!is_array($values)) {
+            return $values;
+        }
+        array_walk_recursive($values, function (&$value) {
+
+            if(self::getType($value) == 'datetime') {
+                $value = new DateTime($value->scalar);
+            }
+
+            if(self::getType($value) == 'base64') {
+                $value = $value->scalar;
+            }
+
+        });
+        return $values;
     }
 
     /**
@@ -87,6 +116,7 @@ class Xmlrpc {
      * @return string
      */
     public static function encode($value) {
+        $value = self::encodeValues($value);
         return xmlrpc_encode($value);
     }
 
@@ -97,7 +127,8 @@ class Xmlrpc {
      */
     public static function decode($xml, $options = array()) {
         $options += self::getDefaultOptions();
-        return xmlrpc_decode($xml, $options['encoding']);
+        $result = xmlrpc_decode($xml, $options['encoding']);
+        return self::decodeValues($result);
     }
 
     /**
@@ -108,6 +139,7 @@ class Xmlrpc {
      */
     public static function encodeRequest($methodName, $arguments, $options = array()) {
         $options += self::getDefaultOptions();
+        $arguments = self::encodeValues($arguments);
         return xmlrpc_encode_request($methodName, $arguments, $options);
     }
 
@@ -119,7 +151,8 @@ class Xmlrpc {
      */
     public static function decodeRequest($xml, &$methodName, $options = array()) {
         $options += self::getDefaultOptions();
-        return xmlrpc_decode_request($xml, $methodName, $options['encoding']);
+        $result = xmlrpc_decode_request($xml, $methodName, $options['encoding']);
+        return self::decodeValues($result);
     }
 
     /**
@@ -129,6 +162,7 @@ class Xmlrpc {
      */
     public static function encodeResponse($arguments, $options = array()) {
         $options += self::getDefaultOptions();
+        $arguments = self::encodeValues($arguments);
         return static::encodeRequest(NULL, $arguments, $options);
     }
 

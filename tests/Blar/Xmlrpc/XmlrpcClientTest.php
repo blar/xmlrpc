@@ -13,6 +13,7 @@ class XmlrpcClientTest extends TestCase {
         $client = new XmlrpcClient('http://blar.wordpress.com/xmlrpc.php');
         $client->setNamespace('system');
         $response = $client->listMethods();
+        $this->assertEquals('array', gettype($response));
     }
 
 }
