@@ -7,7 +7,30 @@
 
 ## Methode aufrufen
 
+    // Endpunkt für die Aufrufe
     $client = new XmlrpcClient('http://blar.wordpress.com/xmlrpc.php');
+
+    // Namespace für die Methodenaufrufe festlegen
     $client->setNamespace('system');
+
+    // Method aufrufen ("system.listMethods")
     $response = $client->listMethods();
 
+## Entwurf über die Blogger-API in einem Wordpress-Blog erstellen
+
+    $client = new XmlrpcClient('http://blar.wordpress.com/xmlrpc.php');
+    $client->setNamespace('blogger');
+    $postId = $client->newPost(NULL, NULL, $userName, $password, 'Hello World', false);
+
+## Entwurf über die MetaWeblog-API in einem Wordpress-Blog erstellen
+
+    $client = new XmlrpcClient('http://blar.wordpress.com/xmlrpc.php');
+    $client->setNamespace('metaWeblog');
+    $content = array(
+        'title' => 'foo',
+        'description' => 'bar',
+        'dateCreated => new DateTime('2014-09-29 13:37')
+    );
+    $postId = $client->newPost(NULL, $userName, $password, $content, false);
+
+Variablen vom Typ **DateTime** werden automatisch ohne Konvertierung korrekt per XML-RPC übertragen.
