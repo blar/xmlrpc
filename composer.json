@@ -13,7 +13,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "ext-xmlrpc": "*", "blar/http": "dev-master"
+        "ext-xmlrpc": "*",
+        "blar/http": "dev-master"
     },
     "require-dev": {
         "satooshi/php-coveralls": "dev-master"
